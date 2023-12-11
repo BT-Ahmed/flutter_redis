@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../view_models/real_estate_list_view_model.dart';
+import '../../services/real_estate_service.dart';
 import '../../widgets/real_estate_listing/real_estate_list.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +14,9 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Real Estate Listings'),
       ),
       body: ChangeNotifierProvider(
-        create: (context) => RealEstateListViewModel(),
+        // Create an instance of RealEstateService and pass it to the ViewModel
+        create: (context) =>
+            RealEstateListViewModel(realEstateService: RealEstateService()),
         child: Consumer<RealEstateListViewModel>(
           builder: (context, viewModel, child) {
             return FutureBuilder(

@@ -50,6 +50,6 @@ class RealEstateService {
 
   Future<void> deleteRealEstate(int id) async {
     await _connect();
-    await _command.del('realEstate:$id');
+    await _command.send_object(['DEL' 'realEstate:$id']);
   }
 }
