@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redis/models/real_estate.dart';
 import 'package:provider/provider.dart';
 
+import '../models/real_estate_category.dart';
+import '../models/real_estate_listing_type.dart';
 import '../services/real_estate_service.dart';
 import '../view_models/real_estate_list_view_model.dart';
 import '../view_models/real_estate_view_model.dart';
@@ -21,6 +24,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   late Future<void> _fetchRealEstatesFuture;
 
   @override
@@ -37,26 +42,33 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        elevation: 10,
         title: const Text('Real Estate Listings'),
       ),
-      body: RefreshIndicator(
-        onRefresh: _fetchRealEstates,
-        child: FutureBuilder(
-          future: _fetchRealEstatesFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
+      body: Container(
+        margin: const EdgeInsets.only(top: 12),
+        child: RefreshIndicator(
+          onRefresh: _fetchRealEstates,
+          child: FutureBuilder(
+            future: _fetchRealEstatesFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
 
-            return Consumer<RealEstateListViewModel>(
-              builder: (context, viewModel, child) {
-                return RealEstateList(realEstates: viewModel.realEstates);
-              },
-            );
-          },
+              return Consumer<RealEstateListViewModel>(
+                builder: (context, viewModel, child) {
+                  return RealEstateList(realEstates: viewModel.realEstates);
+                  // return RealEstateList(realEstates: [RealEstate(id: 1, title: "test", price: 123, category: RealEstateCategory.shops, listingType: RealEstateListingType.forSale, roomsCount: 10, bathroomsCount: 65, surface: 56, city: "test", region: "test")]);
+                },
+              );
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

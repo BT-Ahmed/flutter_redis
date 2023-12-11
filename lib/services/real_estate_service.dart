@@ -7,7 +7,7 @@ import '../models/real_estate.dart';
 class RealEstateService {
   final RedisConnection _connection = RedisConnection();
   late Command _command;
-  final String redisServerUrl = 'localhost';
+  final String redisServerUrl = '10.0.2.2';
   final int redisServerPort = 6379;
 
   Future<void> _connect() async {

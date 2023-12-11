@@ -14,7 +14,14 @@ class RealEstateListItem extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.home), // Placeholder for an image or an icon
         title: Text(realEstate.title),
-        subtitle: Text('Price: \$${realEstate.price}'),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(realEstate.category.name),
+            Text(realEstate.listingType.name),
+            Text('Price: \$${realEstate.price}'),
+          ],
+        ),
         trailing: const Icon(Icons.arrow_forward),
         onTap: () {
           // Navigate to the detail screen

@@ -8,7 +8,7 @@ import '../models/real_estate_listing_type.dart';
 class RealEstateFormScreen extends StatefulWidget {
   final RealEstate? realEstate;
 
-  RealEstateFormScreen({super.key, this.realEstate});
+  const RealEstateFormScreen({super.key, this.realEstate});
 
   @override
   _RealEstateFormScreenState createState() => _RealEstateFormScreenState();
@@ -61,6 +61,26 @@ class _RealEstateFormScreenState extends State<RealEstateFormScreen> {
     super.dispose();
   }
 
+  void _deleteRealEstate() async {
+    try {
+      // Assuming you have a method in your ViewModel to delete the real estate
+      await Provider.of<RealEstateViewModel>(context, listen: false)
+          .deleteRealEstate(widget.realEstate!.id);
+
+      Navigator.of(context).pop(); // Go back if successful
+
+      // Optionally, show a success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Real estate deleted successfully')),
+      );
+    } catch (e) {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete real estate: $e')),
+      );
+    }
+  }
+
   void _saveForm() {
     if (_formKey.currentState!.validate()) {
       final realEstate = RealEstate(
@@ -78,8 +98,8 @@ class _RealEstateFormScreenState extends State<RealEstateFormScreen> {
       );
 
       if (widget.realEstate == null) {
-        Provider.of<RealEstateViewModel>(context, listen: false).addRealEstate(
-            realEstate);
+        Provider.of<RealEstateViewModel>(context, listen: false)
+            .addRealEstate(realEstate);
       } else {
         Provider.of<RealEstateViewModel>(context, listen: false)
             .updateRealEstate(realEstate);
@@ -93,6 +113,9 @@ class _RealEstateFormScreenState extends State<RealEstateFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // Display the title of the real estate
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        elevation: 10,
         title: Text(
             widget.realEstate == null ? 'Add Real Estate' : 'Edit Real Estate'),
         actions: [
@@ -100,6 +123,11 @@ class _RealEstateFormScreenState extends State<RealEstateFormScreen> {
             icon: const Icon(Icons.save),
             onPressed: _saveForm,
           ),
+          if (widget.realEstate != null)
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: _deleteRealEstate,
+            ),
         ],
       ),
       body: Padding(
@@ -108,131 +136,138 @@ class _RealEstateFormScreenState extends State<RealEstateFormScreen> {
           key: _formKey,
           child: ListView(
             children: <Widget>[
-            TextFormField(
-            controller: _titleController,
-            decoration: const InputDecoration(labelText: 'Title'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a title';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _priceController,
-            decoration: const InputDecoration(labelText: 'Price'),
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a price';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _roomsCountController,
-            decoration: const InputDecoration(labelText: 'Number of Rooms'),
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter the number of rooms';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _bathroomsCountController,
-            decoration: const InputDecoration(labelText: 'Number of Bathrooms'),
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter the number of bathrooms';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _surfaceController,
-            decoration: const InputDecoration(labelText: 'Surface (sqm)'),
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter the surface area';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _cityController,
-            decoration: const InputDecoration(labelText: 'City'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a city';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _regionController,
-            decoration: const InputDecoration(labelText: 'Region'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a region';
-              }
-              return null;
-            },
-          ),
-          DropdownButtonFormField<RealEstateCategory>(
-            value: _selectedCategory,
-            decoration: const InputDecoration(labelText: 'Category'),
-            items: RealEstateCategory.values.map((category) {
-              return DropdownMenuItem(
-                value: category,
-                child: Text(category
-                    .toString()
-                    .split('.')
-                    .last),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                _selectedCategory = newValue!;
-              });
-            },
-          ),
-          DropdownButtonFormField<RealEstateListingType>(
-            value: _selectedListingType,
-            decoration: const InputDecoration(labelText: 'Listing Type'),
-            items: RealEstateListingType.values.map((type) {
-              return DropdownMenuItem(
-                value: type,
-                child: Text(type
-                    .toString()
-                    .split('.')
-                    .last),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                _selectedListingType = newValue!;
-              });
-            },
-          ),
-          Container(
-            margin: const EdgeInsets.only(top:12.0),
-            child: ElevatedButton(
-              onPressed: _saveForm,
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(
-                    double.infinity, 50), // make button width full and height 50
+              TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(labelText: 'Title'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a title';
+                  }
+                  return null;
+                },
               ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [Icon(Icons.save), SizedBox(width:6), Text('Save Real Estate')],
+              DropdownButtonFormField<RealEstateCategory>(
+                value: _selectedCategory,
+                decoration: const InputDecoration(labelText: 'Category'),
+                items: RealEstateCategory.values
+                    .map((RealEstateCategory category) {
+                  return DropdownMenuItem(
+                    value: category,
+                    child: Text(category.name), // Use the extension method here
+                  );
+                }).toList(),
+                onChanged: (RealEstateCategory? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      _selectedCategory = newValue;
+                    });
+                  }
+                },
               ),
-            ),
-          )],
+              DropdownButtonFormField<RealEstateListingType>(
+                value: _selectedListingType,
+                decoration: const InputDecoration(labelText: 'Listing Type'),
+                items: RealEstateListingType.values
+                    .map((RealEstateListingType type) {
+                  return DropdownMenuItem(
+                    value: type,
+                    child: Text(type.name), // Use the extension method here
+                  );
+                }).toList(),
+                onChanged: (RealEstateListingType? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      _selectedListingType = newValue;
+                    });
+                  }
+                },
+              ),
+              TextFormField(
+                controller: _priceController,
+                decoration: const InputDecoration(labelText: 'Price'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a price';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _roomsCountController,
+                decoration: const InputDecoration(labelText: 'Number of Rooms'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the number of rooms';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _bathroomsCountController,
+                decoration:
+                    const InputDecoration(labelText: 'Number of Bathrooms'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the number of bathrooms';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _surfaceController,
+                decoration: const InputDecoration(labelText: 'Surface (m²)'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the surface area';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _cityController,
+                decoration: const InputDecoration(labelText: 'City'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a city';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _regionController,
+                decoration: const InputDecoration(labelText: 'Region'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a region';
+                  }
+                  return null;
+                },
+              ),
+
+              Container(
+                margin: const EdgeInsets.only(top: 24.0),
+                child: ElevatedButton(
+                  onPressed: _saveForm,
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity,
+                        50), // make button width full and height 50
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.save),
+                      SizedBox(width: 6),
+                      Text('Save Real Estate')
+                    ],
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       ),
