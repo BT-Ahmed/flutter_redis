@@ -1,11 +1,13 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
 import 'package:redis/redis.dart';
 import '../models/real_estate.dart';
 
 class RealEstateService {
   final RedisConnection _connection = RedisConnection();
   late Command _command;
-  final String redisServerUrl = 'your.redis.server.url';
+  final String redisServerUrl = 'localhost';
   final int redisServerPort = 6379;
 
   Future<void> _connect() async {

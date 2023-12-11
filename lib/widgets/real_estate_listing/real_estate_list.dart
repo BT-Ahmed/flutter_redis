@@ -5,7 +5,7 @@ import '../../models/real_estate.dart';
 class RealEstateList extends StatelessWidget {
   final List<RealEstate> realEstates;
 
-  const RealEstateList({Key? key, required this.realEstates}) : super(key: key);
+  const RealEstateList({super.key, required this.realEstates});
 
   @override
   Widget build(BuildContext context) {

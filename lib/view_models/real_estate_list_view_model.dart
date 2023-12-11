@@ -13,7 +13,7 @@ class RealEstateListViewModel with ChangeNotifier {
   Future<void> fetchRealEstates() async {
     isLoading = true;
     errorMessage = null;
-    notifyListeners();
+    Future.microtask(notifyListeners);
 
     try {
       realEstates = await realEstateService.getAllRealEstates();

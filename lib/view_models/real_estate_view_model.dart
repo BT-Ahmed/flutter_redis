@@ -4,6 +4,7 @@ import '../services/real_estate_service.dart';
 
 class RealEstateViewModel with ChangeNotifier {
   final RealEstateService realEstateService;
+  List<RealEstate> realEstates = []; // Define the list to hold real estate entries
   RealEstate? realEstate;
   bool isLoading = false;
   String? errorMessage;
@@ -24,6 +25,18 @@ class RealEstateViewModel with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> addRealEstate(RealEstate realEstate) async {
+    try {
+      var addedRealEstate = await realEstateService.addRealEstate(realEstate);
+      realEstates.add(addedRealEstate); // Add the new real estate to the local list
+      notifyListeners(); // Notify listeners to update UI
+    } catch (e) {
+      errorMessage = e.toString(); // Assign the error message
+      notifyListeners(); // Notify listeners there was an error
+    }
+  }
+
 
   // Update a real estate item
   Future<void> updateRealEstate(RealEstate updatedRealEstate) async {

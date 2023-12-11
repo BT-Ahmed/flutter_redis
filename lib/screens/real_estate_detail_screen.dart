@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../models/real_estate.dart';
+import '../models/real_estate.dart';
 
 class RealEstateDetailScreen extends StatelessWidget {
   final RealEstate realEstate;
 
-  RealEstateDetailScreen({Key? key, required this.realEstate})
+  const RealEstateDetailScreen({Key? key, required this.realEstate})
       : super(key: key);
 
   @override
