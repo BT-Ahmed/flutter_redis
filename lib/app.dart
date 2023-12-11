@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'screens/home/home_screen.dart'; // Import your home screen
 
 class App extends StatelessWidget {
+  const App({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

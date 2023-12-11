@@ -10,7 +10,7 @@ class RealEstateListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Real Estate Listings'),
+        title: const Text('Real Estate Listings'),
       ),
       body: ChangeNotifierProvider(
         create: (context) => RealEstateListViewModel(),

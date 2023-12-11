@@ -8,7 +8,7 @@ extension RealEstateListingTypeExtension on RealEstateListingType {
       case RealEstateListingType.forRent:
         return 'For Rent';
       default:
-        return "";
+        return "Unknown Listing Type";
     }
   }
 }

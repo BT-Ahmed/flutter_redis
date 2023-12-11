@@ -15,7 +15,7 @@ class RealEstateService {
   Future<List<RealEstate>> getAllRealEstates() async {
     await _connect();
     List<RealEstate> realEstates = [];
-    var keys = await _command.keys('realEstate:*');
+    var keys = await _command.get('realEstate:*');
 
     for (var key in keys) {
       var realEstateJson = await _command.get(key);

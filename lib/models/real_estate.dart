@@ -60,4 +60,30 @@ class RealEstate {
       region: map['region'],
     );
   }
+
+  RealEstate copyWith({
+    int? id,
+    String? title,
+    double? price,
+    RealEstateCategory? category,
+    RealEstateListingType? listingType,
+    int? roomsCount,
+    int? bathroomsCount,
+    double? surface,
+    String? city,
+    String? region,
+  }) {
+    return RealEstate(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      price: price ?? this.price,
+      category: category ?? this.category,
+      listingType: listingType ?? this.listingType,
+      roomsCount: roomsCount ?? this.roomsCount,
+      bathroomsCount: bathroomsCount ?? this.bathroomsCount,
+      surface: surface ?? this.surface,
+      city: city ?? this.city,
+      region: region ?? this.region,
+    );
+  }
 }

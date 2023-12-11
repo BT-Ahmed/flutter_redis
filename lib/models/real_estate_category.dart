@@ -26,7 +26,7 @@ extension RealEstateCategoryExtension on RealEstateCategory {
       case RealEstateCategory.officesAndPlates:
         return 'Offices and Plates';
       default:
-        return "";
+        return "Unknown Category";
     }
   }
 }
